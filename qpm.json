@@ -1,0 +1,20 @@
+{
+  "name": "com.cutehacks.gel",
+  "description": "A model for JSON objects with support for sorting and filtering",
+  "author": {
+    "name": "Jason Barron",
+    "email": "jason@cutehacks.com"
+  },
+  "repository": {
+    "type": "GITHUB",
+    "url": ""
+  },
+  "version": {
+    "label": "0.0.1"
+  },
+  "dependencies": [
+  ],
+  "license": "MIT",
+  "pri_filename": "com_cutehacks_gel.pri",
+  "webpage": ""
+}
