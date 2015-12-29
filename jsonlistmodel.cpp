@@ -97,10 +97,8 @@ void JsonListModel::add(const QJSValue &item)
     } else {
         extractRoles(item);
         int row = addItem(item);
-        if (row < 0) {
-            m_lock->unlock();
-            // do nothing
-        } else if (row < originalSize) {
+
+        if (row >= 0 && row < originalSize) {
             QModelIndex index = createIndex(row, 0);
             m_lock->unlock();
             emit dataChanged(index, index);
@@ -108,6 +106,7 @@ void JsonListModel::add(const QJSValue &item)
         }
 
         int newSize = m_keys.count();
+        m_lock->unlock();
 
         if (newSize > originalSize) {
             beginInsertRows(QModelIndex(), originalSize, newSize - 1);
