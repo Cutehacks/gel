@@ -200,9 +200,9 @@ QVariant JsonListModel::data(const QModelIndex &index, int role) const
     QJSValue item = m_items[m_keys[row]];
     QString roleName = getRole(role);
     if (item.isString() || item.isNumber() || item.isDate())
-        return item.toString();
+        return item.toVariant();
     else if (item.hasProperty(roleName))
-        return item.property(roleName).toString();
+        return item.property(roleName).toVariant();
     return QJSValue().toVariant();
 }
 
