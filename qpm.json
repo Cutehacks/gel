@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "GITHUB",
-    "url": ""
+    "url": "https://github.com/Cutehacks/gel.git"
   },
   "version": {
     "label": "0.0.1"
@@ -16,5 +16,5 @@
   ],
   "license": "MIT",
   "pri_filename": "com_cutehacks_gel.pri",
-  "webpage": ""
+  "webpage": "https://github.com/Cutehacks/gel"
 }
