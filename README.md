@@ -104,6 +104,24 @@ function should return true for items that should be included; otherwise false.
 Return the jsobject at the index specified by the number. If Collection is sorted or filtered, then
 the index here refers to the index in the Collection *not* the JsonListModel.
 
+### descendingSort : property bool: false
+
+Indicates if the role based sorting is sorted in ascending or descending order.
+
+**NOTE** If the `comparator` is a function, this property has no effect.
+
+### caseSensitiveSort : property bool: true
+
+Indicates if the role based sorting is case sensitive or not.
+
+**NOTE** If the `comparator` is a function, this property has no effect.
+
+### localeAwareSort : property bool: false
+
+Indicates if the role based sorting is locale aware or not.
+
+**NOTE** If the `comparator` is a function, this property has no effect.
+
 ## Example
 
 The following is an example of using the items:
