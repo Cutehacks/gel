@@ -36,7 +36,7 @@ protected:
     void addRole(const QString&);
     QString getRole(int role) const;
 
-    void extractRoles(const QJSValue &item);
+    void extractRoles(const QJSValue &item, const QString&);
 
 public slots:
     void setIdAttribute(QString idAttribute);

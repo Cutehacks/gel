@@ -12,12 +12,17 @@ JsonListModel::JsonListModel(QObject *parent) :
 {
 }
 
-void JsonListModel::extractRoles(const QJSValue &item)
+void JsonListModel::extractRoles(const QJSValue &item,
+                                 const QString &prefix = QString())
 {
     QJSValueIterator it(item);
     while (it.next()) {
-        QString n = it.name();
+        QString n = prefix + it.name();
         addRole(n);
+
+        QJSValue v = it.value();
+        if (!v.isArray() && v.isObject())
+            extractRoles(it.value(), n + ".");
     }
 }
 
@@ -199,11 +204,19 @@ QVariant JsonListModel::data(const QModelIndex &index, int role) const
 
     QJSValue item = m_items[m_keys[row]];
     QString roleName = getRole(role);
-    if (item.isString() || item.isNumber() || item.isDate())
+
+    if (item.isString() || item.isNumber() || item.isDate()) {
         return item.toVariant();
-    else if (item.hasProperty(roleName))
-        return item.property(roleName).toVariant();
-    return QJSValue().toVariant();
+    } else {
+        QStringList parts = roleName.split(".");
+        roleName = parts.takeLast();
+        for (QStringList::const_iterator p = parts.constBegin(); p != parts.end(); p++) {
+            item = item.property(*p);
+        }
+        if (item.hasProperty(roleName))
+            return item.property(roleName).toVariant();
+        return QJSValue().toVariant();
+    }
 }
 
 QHash<int, QByteArray> JsonListModel::roleNames() const

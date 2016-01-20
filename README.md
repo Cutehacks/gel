@@ -72,6 +72,7 @@ Specifies the comparator to use when sorting the collection.
 
 * If a string is passed to this property, it refers to the property name that
  should be used for sorting.
+* Nested properties are supported by using the dot notation (eg: `"owner.firstname"`)
 * If a function is passed to this property, it should have the following signature:
 
 ```
