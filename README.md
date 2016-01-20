@@ -53,6 +53,10 @@ Remove the specified object from the model.
 
 Remove all items from the model.
 
+### at(index : number) : function
+
+Return the jsobject at the index specified by the number.
+
 ## Collection
 
 An item for sorting an filtering a JsonListModel. The Collection itself does not
@@ -80,10 +84,24 @@ The function will receive two arguments that are JSON objects. The implementatio
 this function is responsible for comparing the two items and returning true if `a` is
 less than `b`; otherwise false.
 
+**NOTE** When comparing string properties in a comparator function, you might want to
+consider using the `localeCompare` function for proper locale specific sorting. For example:
+
+```
+function lessThan(a, b) {
+	return a.value.localeCompare(b.value) < 0;
+}
+```
+
 ### filter : function
 
 A function indicating which items should be included in th resulting collection. The
 function should return true for items that should be included; otherwise false.
+
+### at(index: number) : function
+
+Return the jsobject at the index specified by the number. If Collection is sorted or filtered, then
+the index here refers to the index in the Collection *not* the JsonListModel.
 
 ## Example
 

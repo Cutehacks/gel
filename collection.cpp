@@ -106,3 +106,12 @@ bool Collection::lessThan(const QModelIndex &source_left, const QModelIndex &sou
         return QSortFilterProxyModel::lessThan(source_left, source_right);
     }
 }
+
+QJSValue Collection::at(int row) const
+{
+    QModelIndex m = index(row, 0);
+    QModelIndex source = mapToSource(m);
+    JsonListModel *jsonModel = qobject_cast<JsonListModel*>(sourceModel());
+    return jsonModel->at(source.row());
+}
+

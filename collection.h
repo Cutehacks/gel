@@ -21,6 +21,8 @@ public:
     QJSValue filter() const;
     JsonListModel *model() const;
 
+    Q_INVOKABLE QJSValue at(int) const;
+
 public slots:
     void setComparator(QJSValue comparator);
     void setFilter(QJSValue filter);
