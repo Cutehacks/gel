@@ -54,7 +54,7 @@
 
 QPM_BEGIN_NAMESPACE(com, cutehacks, gel)
 
-void registerEngine(QQmlEngine *engine)
+void registerEngine(QQmlEngine *)
 {
     qmlRegisterType<JsonListModel>("com.cutehacks.gel", 1, 0, "JsonListModel");
     qmlRegisterType<Collection>("com.cutehacks.gel", 1, 0, "Collection");
