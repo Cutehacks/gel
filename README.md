@@ -113,6 +113,10 @@ Remove all items from the model.
 
 Return the jsobject at the index specified by the number.
 
+### get(id : jsvalue) : function
+
+Return the jsobject that has the id specified by 'id'.
+
 ## Collection
 
 An item for sorting an filtering a JsonListModel. The Collection itself does not

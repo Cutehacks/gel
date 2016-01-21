@@ -229,6 +229,13 @@ QJSValue JsonListModel::at(int row) const
     return QJSValue();
 }
 
+QJSValue JsonListModel::get(const QJSValue &id) const
+{
+    QString key = id.toString();
+    QReadLocker readLock(m_lock);
+    return m_items[key];
+}
+
 QModelIndex JsonListModel::index(int row, int column, const QModelIndex &) const
 {
     QReadLocker readLock(m_lock);

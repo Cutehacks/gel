@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE void remove(const QJSValue&);
     Q_INVOKABLE void clear();
     Q_INVOKABLE QJSValue at(int) const;
+    Q_INVOKABLE QJSValue get(const QJSValue&) const;
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
