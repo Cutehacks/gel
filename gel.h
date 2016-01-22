@@ -52,7 +52,8 @@
 #include "jsonlistmodel.h"
 #include "collection.h"
 
-QPM_BEGIN_NAMESPACE(com, cutehacks, gel)
+// QPM_BEGIN_NAMESPACE(com, cutehacks, gel)
+namespace com { namespace cutehacks { namespace gel {
 
 void registerEngine(QQmlEngine *)
 {
@@ -60,7 +61,8 @@ void registerEngine(QQmlEngine *)
     qmlRegisterType<Collection>("com.cutehacks.gel", 1, 0, "Collection");
 }
 
-QPM_END_NAMESPACE(com, cutehacks, gel)
+} } };
+//QPM_END_NAMESPACE(com, cutehacks, gel)
 
 #endif // GEL_H
 
