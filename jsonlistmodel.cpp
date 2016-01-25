@@ -137,6 +137,9 @@ void JsonListModel::remove(const QJSValue &item)
             return;
         }
 
+        if (index == -1)
+            return;
+
         m_keys.removeAt(index);
         m_items.remove(key);
     }
