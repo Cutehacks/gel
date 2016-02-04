@@ -150,7 +150,6 @@ void JsonListModel::clear()
     int originalSize = m_keys.length();
     m_keys.clear();
     m_items.clear();
-    m_roles.clear();
     m_lock->unlock();
 
    beginRemoveRows(QModelIndex(), 0, originalSize);
