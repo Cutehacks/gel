@@ -77,7 +77,7 @@ public slots:
     }
 
 private slots:
-    void roleAdded(QString);
+    void rolesChanged();
 
 signals:
     void comparatorChanged(QJSValue comparator);

@@ -41,6 +41,29 @@ Specifies the name of the property that should be used to uniquely identify
 this object within the model. Adding an object with the same value for this
 property will update the existing object instead of creating a new one.
 
+## dynamicRoles : property bool: false
+
+Specifies whether the added JSON objects added might have a varying set of
+properties. If not set only the properties of the first JSON object in a
+list will get extracted as roles. Enabling this might have a performance
+penalty when dealing with large collections of items.
+
+Note: QML's ListView seems to have a bug as of present (Qt 5.5.1) where it
+doesn't detect roles being added to a model, even if modelReset is fired.
+Here's a workaround that can be used to get around that:
+
+```
+Connections {
+    target: model
+    onModelReset: {
+        // workaround for ListView not handling new roles being added
+        var temp = view.model;
+        view.model = null;
+        view.model = temp;
+    }
+}
+```
+
 ### add(jsobject | jsarray | string | number | date) : function
 
 Add a new JSON object or an array of objects to the model

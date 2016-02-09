@@ -8,22 +8,60 @@ static const int BASE_ROLE = Qt::UserRole + 1;
 JsonListModel::JsonListModel(QObject *parent) :
     QAbstractItemModel(parent),
     m_lock(new QReadWriteLock(QReadWriteLock::Recursive)),
-    m_idAttribute("id")
+    m_idAttribute("id"),
+    m_dynamicRoles(false)
 {
 }
 
-void JsonListModel::extractRoles(const QJSValue &item,
+bool JsonListModel::dynamicRoles() const
+{
+    return m_dynamicRoles;
+}
+
+void JsonListModel::setDynamicRoles(bool dynamicRoles)
+{
+    if (dynamicRoles == m_dynamicRoles)
+        return;
+    m_dynamicRoles = dynamicRoles;
+    emit dynamicRolesChanged();
+}
+
+bool JsonListModel::addRole(const QString &role)
+{
+    // QML's views seem to freak out if the role order changes
+    // so use a set to track which roles are already added and a list
+    // to maintain the correct order
+
+    if (m_roleSet.constFind(role) != m_roleSet.constEnd())
+        return false;
+
+    m_roleSet.insert(role);
+    m_roles << role;
+
+    return true;
+}
+
+bool JsonListModel::extractRoles(const QJSValue &item,
                                  const QString &prefix = QString())
 {
-    QJSValueIterator it(item);
-    while (it.next()) {
-        QString n = prefix + it.name();
-        addRole(n);
+    bool rolesAdded = false;
 
-        QJSValue v = it.value();
-        if (!v.isArray() && v.isObject())
-            extractRoles(it.value(), n + ".");
+    if (prefix.isNull() && (item.isString() || item.isNumber() || item.isDate())) {
+        if (addRole("modelData"))
+            rolesAdded = true;
+    } else {
+        QJSValueIterator it(item);
+        while (it.next()) {
+            QString n = prefix + it.name();
+            if (addRole(n))
+                rolesAdded = true;
+            QJSValue v = it.value();
+            if (!v.isArray() && v.isObject() && extractRoles(it.value(), n + "."))
+                rolesAdded = true;
+        }
     }
+
+    return rolesAdded;
 }
 
 int JsonListModel::addItem(const QJSValue &item)
@@ -33,7 +71,6 @@ int JsonListModel::addItem(const QJSValue &item)
     QString id;
     if (item.isString() || item.isNumber() || item.isDate()) {
         id = item.toString();
-        addRole("modelData");
     } else if (item.isObject()) {
         if (!item.hasProperty(m_idAttribute)) {
             qWarning() << QString("Object does not have a %1 property").arg(m_idAttribute);
@@ -67,45 +104,58 @@ void JsonListModel::add(const QJSValue &item)
         int updateFrom = INT_MAX;
         int updateTo = INT_MIN;
 
-        // Only extract roles from the first item (assumes uniform data)
-        if (array.next()) {
-            if (array.hasNext()) { // ignore if last element
-                extractRoles(array.value());
-                int row = addItem(array.value());
-                if (row >= 0 && row < originalSize) {
-                    updateFrom = qMin(updateFrom, row);
-                    updateTo = qMax(updateTo, row);
-                }
-            }
-        }
+        bool rolesAdded = false;
+        bool isFirstItem = true;
         while (array.next()) {
             if (!array.hasNext())
                 break; // last value in array is an int with the length
+            if ((m_dynamicRoles || isFirstItem) && extractRoles(array.value()))
+                rolesAdded = true;
             int row = addItem(array.value());
             if (row >= 0 && row < originalSize) {
                 updateFrom = qMin(updateFrom, row);
                 updateTo = qMax(updateTo, row);
             }
+            isFirstItem = false;
         }
-        int newSize = m_keys.count();
-        m_lock->unlock();
 
-        // emit signals after the mutex is unlocked
-        if (newSize > originalSize) {
-            beginInsertRows(QModelIndex(), originalSize, newSize - 1);
-            endInsertRows();
+        if (rolesAdded) {
+            // this implies a model reset
+            m_lock->unlock();
+            emit rolesChanged();
+            beginResetModel();
+            endResetModel();
         } else {
-            if (updateFrom != INT_MAX && updateTo != INT_MIN) {
-                emit dataChanged(createIndex(updateFrom, 0), createIndex(updateTo, 0));
+            int newSize = m_keys.count();
+            m_lock->unlock();
+
+            // emit signals after the mutex is unlocked
+            if (newSize > originalSize) {
+                beginInsertRows(QModelIndex(), originalSize, newSize - 1);
+                endInsertRows();
+            } else {
+                if (updateFrom != INT_MAX && updateTo != INT_MIN) {
+                    emit dataChanged(createIndex(updateFrom, 0), createIndex(updateTo, 0));
+                }
             }
         }
     } else {
-        extractRoles(item);
+        bool rolesAdded = extractRoles(item);
         int row = addItem(item);
+
+        if (rolesAdded) {
+            // this implies a model reset
+            m_lock->unlock();
+            emit rolesChanged();
+            beginResetModel();
+            endResetModel();
+            return;
+        }
 
         if (row >= 0 && row < originalSize) {
             QModelIndex index = createIndex(row, 0);
             m_lock->unlock();
+
             emit dataChanged(index, index);
             return;
         }
@@ -233,17 +283,6 @@ QHash<int, QByteArray> JsonListModel::roleNames() const
 QString JsonListModel::idAttribute() const
 {
     return m_idAttribute;
-}
-
-void JsonListModel::addRole(const QString &r)
-{
-    foreach (const QString s, m_roles) {
-        if (s == r)
-            return;
-    }
-    m_roles.append(r);
-    emit roleAdded(r);
-    // TODO: emit dataChanged(); ?
 }
 
 QString JsonListModel::getRole(int role) const

@@ -2,6 +2,7 @@
 #define JSONLISTMODEL_H
 
 #include <QtCore/QHash>
+#include <QtCore/QSet>
 #include <QtCore/QAbstractItemModel>
 #include <QtQml/QJSValue>
 
@@ -12,6 +13,7 @@ class JsonListModel : public QAbstractItemModel
     Q_OBJECT
 
     Q_PROPERTY(QString idAttribute READ idAttribute WRITE setIdAttribute NOTIFY idAttributeChanged)
+    Q_PROPERTY(bool dynamicRoles READ dynamicRoles WRITE setDynamicRoles NOTIFY dynamicRolesChanged)
 
 public:
     JsonListModel(QObject *parent = 0);
@@ -31,26 +33,33 @@ public:
     QString idAttribute() const;
     int getRole(const QString&) const;
 
+    bool dynamicRoles() const;
+    void setDynamicRoles(bool dynamicRoles);
+
 protected:
     int addItem(const QJSValue &item);
-    void addRole(const QString&);
     QString getRole(int role) const;
 
-    void extractRoles(const QJSValue &item, const QString&);
+    bool extractRoles(const QJSValue &item, const QString&);
 
 public slots:
     void setIdAttribute(QString idAttribute);
 
 signals:
     void idAttributeChanged(QString idAttribute);
-    void roleAdded(const QString&);
+    void rolesChanged();
+    void dynamicRolesChanged();
 
 private:
+    bool addRole(const QString &string);
+
     mutable QReadWriteLock *m_lock;
     QHash<QString, QJSValue> m_items;
     QList<QString> m_keys;
+    QSet<QString> m_roleSet;
     QList<QString> m_roles;
     QString m_idAttribute;
+    bool m_dynamicRoles;
 };
 
 #endif // JSONLISTMODEL_H

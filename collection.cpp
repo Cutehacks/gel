@@ -48,18 +48,18 @@ void Collection::setModel(JsonListModel *model)
         return;
 
     if (oldModel) {
-        disconnect(oldModel, SIGNAL(roleAdded(QString)),
-                   this, SLOT(resetInternalData()));
+        disconnect(oldModel, SIGNAL(rolesChanged()),
+                   this, SLOT(rolesChanged()));
     }
 
     setSourceModel(model);
     updateModel();
-    connect(model, SIGNAL(roleAdded(QString)), this, SLOT(roleAdded(QString)));
+    connect(model, SIGNAL(rolesChanged()), this, SLOT(rolesChanged()));
 
     emit modelChanged(model);
 }
 
-void Collection::roleAdded(QString)
+void Collection::rolesChanged()
 {
     resetInternalData();
     updateModel();
