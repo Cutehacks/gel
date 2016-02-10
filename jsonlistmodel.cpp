@@ -174,18 +174,18 @@ void JsonListModel::remove(const QJSValue &item)
 {
     int index;
     {
-        QWriteLocker writeLocker(m_lock);
         QString key;
         if (item.isString() || item.isNumber() || item.isDate()) {
             key = item.toString();
-            index = m_keys.indexOf(key);
         } else if (item.hasProperty(m_idAttribute)){
             key = item.property(m_idAttribute).toString();
-            index = m_keys.indexOf(key);
         } else {
             qWarning() << "Unable to remove item";
             return;
         }
+
+        QWriteLocker writeLocker(m_lock);
+        index = m_keys.indexOf(key);
 
         if (index == -1)
             return;
