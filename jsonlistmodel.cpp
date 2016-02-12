@@ -1,7 +1,13 @@
 #include <QDebug>
 #include <QtCore/QReadWriteLock>
-#include <QtQml/QJSValueIterator>
 #include "jsonlistmodel.h"
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+#include "jsvalueiterator.h"
+#else
+#include <QtQml/QJSValueIterator>
+typedef QJSValueIterator JSValueIterator;
+#endif
 
 static const int BASE_ROLE = Qt::UserRole + 1;
 
@@ -50,7 +56,7 @@ bool JsonListModel::extractRoles(const QJSValue &item,
         if (addRole("modelData"))
             rolesAdded = true;
     } else {
-        QJSValueIterator it(item);
+        JSValueIterator it(item);
         while (it.next()) {
             QString n = prefix + it.name();
             if (addRole(n))
@@ -100,7 +106,7 @@ void JsonListModel::add(const QJSValue &item)
     m_lock->lockForWrite();
     int originalSize = m_keys.count();
     if (item.isArray()) {
-        QJSValueIterator array(item);
+        JSValueIterator array(item);
         int updateFrom = INT_MAX;
         int updateTo = INT_MIN;
 

@@ -1,5 +1,6 @@
 
 HEADERS += \
+    $$PWD/jsvalueiterator.h \
     $$PWD/jsonlistmodel.h \
     $$PWD/collection.h \
     $$PWD/gel.h
