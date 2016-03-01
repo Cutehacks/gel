@@ -32,6 +32,11 @@ void JsonListModel::setDynamicRoles(bool dynamicRoles)
     emit dynamicRolesChanged();
 }
 
+QJSValue JsonListModel::attachedProperties() const
+{
+    return m_attachedProperties;
+}
+
 bool JsonListModel::addRole(const QString &role)
 {
     // QML's views seem to freak out if the role order changes
@@ -273,6 +278,13 @@ QVariant JsonListModel::data(const QModelIndex &index, int role) const
         }
         if (item.hasProperty(roleName))
             return item.property(roleName).toVariant();
+        else if (m_attachedProperties.hasProperty(roleName)) {
+            QJSValue generatedProp = m_attachedProperties.property(roleName);
+            QJSValue generatedResult = generatedProp;
+            if (generatedProp.isCallable())
+                generatedResult = generatedProp.call(QJSValueList() << item << row);
+            return generatedResult.toVariant();
+        }
         return QJSValue().toVariant();
     }
 }
@@ -314,6 +326,20 @@ void JsonListModel::setIdAttribute(QString idAttribute)
 
     m_idAttribute = idAttribute;
     emit idAttributeChanged(idAttribute);
+}
+
+void JsonListModel::setAttachedProperties(QJSValue attachedProperties)
+{
+    if (m_attachedProperties.strictlyEquals(attachedProperties))
+        return;
+
+    m_attachedProperties = attachedProperties;
+
+    JSValueIterator it(m_attachedProperties);
+    while (it.next())
+        addRole(it.name());
+
+    emit attachedPropertiesChanged(attachedProperties);
 }
 
 bool JsonListModel::setData(const QModelIndex &, const QVariant &, int)

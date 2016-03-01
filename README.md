@@ -41,18 +41,18 @@ Specifies the name of the property that should be used to uniquely identify
 this object within the model. Adding an object with the same value for this
 property will update the existing object instead of creating a new one.
 
-## dynamicRoles : property bool: false
+### dynamicRoles : property bool: false
 
 Specifies whether the added JSON objects added might have a varying set of
 properties. If not set only the properties of the first JSON object in a
 list will get extracted as roles. Enabling this might have a performance
 penalty when dealing with large collections of items.
 
-Note: QML's ListView seems to have a bug as of present (Qt 5.5.1) where it
+**NOTE:** QML's ListView seems to have a bug as of present (Qt 5.5.1) where it
 doesn't detect roles being added to a model, even if modelReset is fired.
 Here's a workaround that can be used to get around that:
 
-```
+```qml
 Connections {
     target: model
     onModelReset: {
@@ -63,6 +63,39 @@ Connections {
     }
 }
 ```
+
+### attachedProperties : property jsobject
+
+Specifies additional properties (roles) that should be attached to every object
+in the model. These properties will then be exposed to the view that uses the model 
+so they are available to the delegate for property binding, but also available for 
+sorting (via `comparator`) and ListView's `section` property.
+
+The properties are evaluated at runtime when the view needs them, they are not 
+pre-calculated on insertion into the model. Therefore if the delegate does not use 
+them, they should have no additional cost.
+
+The types of properties supported are primitive types such as Number, String and Date, 
+but perhaps most powerful is the ability to attach functions. For example:
+
+```qml
+JsonListModel {
+	// ...
+
+	attachedProperties: ({
+		lowercase: function(item, index) {
+			return item.title.toLowerCase();
+		}
+	})
+}
+
+```
+
+The above example is somewhat contrived since you could just as easily do the same
+thing in the delegate, but by using an attached property, you could also sort or
+section (group by) based on this property.
+
+**NOTE:** The declaration of the object must be surrounded by round brackets `(` and `)` 
 
 ### add(jsobject | jsarray | string | number | date) : function
 
@@ -98,7 +131,7 @@ Specifies the comparator to use when sorting the collection.
 * Nested properties are supported by using the dot notation (eg: `"owner.firstname"`)
 * If a function is passed to this property, it should have the following signature:
 
-```
+```js
 function lessThan(a, b) {
 	return a.value < b.value;
 }
@@ -111,7 +144,7 @@ less than `b`; otherwise false.
 **NOTE** When comparing string properties in a comparator function, you might want to
 consider using the `localeCompare` function for proper locale specific sorting. For example:
 
-```
+```js
 function lessThan(a, b) {
 	return a.value.localeCompare(b.value) < 0;
 }
@@ -149,7 +182,7 @@ Indicates if the role based sorting is locale aware or not.
 
 The following is an example of using the items:
 
-```
+```qml
     Collection {
         id: collection
         model: JsonListModel {

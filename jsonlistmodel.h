@@ -14,6 +14,7 @@ class JsonListModel : public QAbstractItemModel
 
     Q_PROPERTY(QString idAttribute READ idAttribute WRITE setIdAttribute NOTIFY idAttributeChanged)
     Q_PROPERTY(bool dynamicRoles READ dynamicRoles WRITE setDynamicRoles NOTIFY dynamicRolesChanged)
+    Q_PROPERTY(QJSValue attachedProperties READ attachedProperties WRITE setAttachedProperties NOTIFY attachedPropertiesChanged)
 
 public:
     JsonListModel(QObject *parent = 0);
@@ -32,23 +33,24 @@ public:
     QHash<int, QByteArray> roleNames() const;
     QString idAttribute() const;
     int getRole(const QString&) const;
-
     bool dynamicRoles() const;
     void setDynamicRoles(bool dynamicRoles);
+    QJSValue attachedProperties() const;
 
 protected:
     int addItem(const QJSValue &item);
     QString getRole(int role) const;
-
     bool extractRoles(const QJSValue &item, const QString&);
 
 public slots:
     void setIdAttribute(QString idAttribute);
+    void setAttachedProperties(QJSValue attachedProperties);
 
 signals:
     void idAttributeChanged(QString idAttribute);
     void rolesChanged();
     void dynamicRolesChanged();
+    void attachedPropertiesChanged(QJSValue attachedProperties);
 
 private:
     bool addRole(const QString &string);
@@ -60,6 +62,7 @@ private:
     QList<QString> m_roles;
     QString m_idAttribute;
     bool m_dynamicRoles;
+    QJSValue m_attachedProperties;
 };
 
 #endif // JSONLISTMODEL_H
