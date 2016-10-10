@@ -115,3 +115,8 @@ QJSValue Collection::at(int row) const
     return jsonModel->at(source.row());
 }
 
+void Collection::reSort()
+{
+    sort(0);
+}
+
