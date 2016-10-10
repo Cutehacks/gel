@@ -119,7 +119,7 @@ Return the jsobject that has the id specified by 'id'.
 
 ## Collection
 
-An item for sorting an filtering a JsonListModel. The Collection itself does not
+An item for sorting and filtering a JsonListModel. The Collection itself does not
 store any data, but rather proxies the data stored inside the source model.
 
 ### model : JsonListModel
