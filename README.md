@@ -119,7 +119,7 @@ Return the jsobject that has the id specified by 'id'.
 
 ## Collection
 
-An item for sorting an filtering a JsonListModel. The Collection itself does not
+An item for sorting and filtering a JsonListModel. The Collection itself does not
 store any data, but rather proxies the data stored inside the source model.
 
 ### model : JsonListModel
@@ -163,6 +163,15 @@ function should return true for items that should be included; otherwise false.
 
 Return the jsobject at the index specified by the number. If Collection is sorted or filtered, then
 the index here refers to the index in the Collection *not* the JsonListModel.
+
+### reSort() : function
+
+Trigger sorting the collection again.
+
+**NOTE** Calling this function is *not* required if data within the model itself has changed
+(re-sorting will be conducted automatically in that case). You want to call this function if
+external data has been updated, e.g. you sort a model by distance and the current position
+of the user has changed.
 
 ### descendingSort : property bool: false
 
