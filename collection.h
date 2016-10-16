@@ -26,8 +26,6 @@ public:
 
     Q_INVOKABLE QJSValue at(int) const;
 
-    Q_INVOKABLE void reSort();
-
     inline bool caseSensitiveSort() const
     {
         return sortCaseSensitivity() == Qt::CaseSensitive;
