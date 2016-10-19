@@ -7,6 +7,7 @@
 #include <QtQml/QJSValue>
 
 class QReadWriteLock;
+class QQmlEngine;
 
 class JsonListModel : public QAbstractItemModel
 {
@@ -24,6 +25,7 @@ public:
     Q_INVOKABLE void clear();
     Q_INVOKABLE QJSValue at(int) const;
     Q_INVOKABLE QJSValue get(const QJSValue&) const;
+    Q_INVOKABLE QJSValue asArray(bool deepCopy = false) const;
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -55,6 +57,7 @@ signals:
 
 private:
     bool addRole(const QString &string);
+    QJSValue clone(QQmlEngine *, const QJSValue&) const;
 
     mutable QReadWriteLock *m_lock;
     QHash<QString, QJSValue> m_items;

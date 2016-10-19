@@ -1,5 +1,7 @@
 #include <QDebug>
 #include <QtCore/QReadWriteLock>
+#include <QtQml/qqml.h>
+#include <QtQml/QQmlEngine>
 #include "jsonlistmodel.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
@@ -50,6 +52,23 @@ bool JsonListModel::addRole(const QString &role)
     m_roles << role;
 
     return true;
+}
+
+QJSValue JsonListModel::clone(QQmlEngine *engine, const QJSValue &src) const
+{
+    if (!src.isObject())
+        return src;
+
+    QJSValue dst = engine->newObject();
+
+    JSValueIterator it(src);
+    while (it.next()) {
+        QJSValue v = it.value();
+        if (v.isObject())
+            v = clone(engine, v);
+        dst.setProperty(it.name(), v);
+    }
+    return dst;
 }
 
 bool JsonListModel::extractRoles(const QJSValue &item,
@@ -234,6 +253,23 @@ QJSValue JsonListModel::get(const QJSValue &id) const
     QString key = id.toString();
     QReadLocker readLock(m_lock);
     return m_items[key];
+}
+
+QJSValue JsonListModel::asArray(bool deepCopy) const
+{
+    QQmlEngine *engine = qmlEngine(this);
+    QReadLocker readLock(m_lock);
+    QJSValue array = engine->newArray(m_keys.length());
+    QList<QString>::const_iterator it = m_keys.cbegin();
+    int i = 0;
+    if (deepCopy) {
+        while (it != m_keys.cend())
+            array.setProperty(i++, clone(engine, m_items.value(*it++)));
+    } else {
+        while (it != m_keys.cend())
+            array.setProperty(i++, m_items.value(*it++));
+    }
+    return array;
 }
 
 QModelIndex JsonListModel::index(int row, int column, const QModelIndex &) const

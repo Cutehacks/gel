@@ -117,6 +117,15 @@ Return the jsobject at the index specified by the number.
 
 Return the jsobject that has the id specified by 'id'.
 
+### asArray([deepCopy : bool]) : array
+
+Creates a new array containing the items in the model. If objects are
+stored in the model, then the default behavior is that the array contains
+references to the objects in the model such that modifications to the array
+will affect the model (though no signals are emitted). If the value of 
+`deepCopy` is set to `true` then the objects are cloned before being
+added to the array.
+
 ## Collection
 
 An item for sorting and filtering a JsonListModel. The Collection itself does not
