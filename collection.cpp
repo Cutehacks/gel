@@ -1,6 +1,8 @@
 #include "collection.h"
 #include "jsonlistmodel.h"
 
+namespace com { namespace cutehacks { namespace gel {
+
 Collection::Collection(QObject *parent) : QSortFilterProxyModel(parent)
 {
     sort(0);
@@ -111,4 +113,6 @@ void Collection::reSort()
 {
     sort(0);
 }
+
+} } }
 

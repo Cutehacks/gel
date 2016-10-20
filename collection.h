@@ -4,7 +4,9 @@
 #include <QtCore/QSortFilterProxyModel>
 #include <QtQml/QJSValue>
 
-class JsonListModel;
+#include "jsonlistmodel.h"
+
+namespace com { namespace cutehacks { namespace gel {
 
 class Collection : public QSortFilterProxyModel
 {
@@ -98,5 +100,7 @@ private:
     mutable QJSValue m_comparator;
     mutable QJSValue m_filter;
 };
+
+} } }
 
 #endif // COLLECTION_H

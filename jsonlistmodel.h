@@ -9,6 +9,8 @@
 class QReadWriteLock;
 class QQmlEngine;
 
+namespace com { namespace cutehacks { namespace gel {
+
 class JsonListModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -68,5 +70,7 @@ private:
     bool m_dynamicRoles;
     QJSValue m_attachedProperties;
 };
+
+} } }
 
 #endif // JSONLISTMODEL_H

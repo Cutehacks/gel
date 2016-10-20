@@ -7,4 +7,5 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/jsonlistmodel.cpp \
-    $$PWD/collection.cpp
+    $$PWD/collection.cpp \
+    $$PWD/gel.cpp

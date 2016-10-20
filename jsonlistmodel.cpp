@@ -11,6 +11,8 @@
 typedef QJSValueIterator JSValueIterator;
 #endif
 
+namespace com { namespace cutehacks { namespace gel {
+
 static const int BASE_ROLE = Qt::UserRole + 1;
 
 JsonListModel::JsonListModel(QObject *parent) :
@@ -390,3 +392,4 @@ bool JsonListModel::setData(const QModelIndex &, const QVariant &, int)
     return false;
 }
 
+} } }

@@ -1,5 +1,7 @@
 #include <QtQml/QJSValue>
 
+namespace com { namespace cutehacks { namespace gel {
+
 class JSValueIterator
 {
 public:
@@ -44,4 +46,6 @@ private:
     QJSValue m_value;
     QList<QString> m_keys;
 };
+
+} } }
 
