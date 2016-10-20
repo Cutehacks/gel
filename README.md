@@ -165,8 +165,17 @@ function lessThan(a, b) {
 
 ### filter : function
 
-A function indicating which items should be included in th resulting collection. The
+A function indicating which items should be included in the resulting collection. The
 function should return true for items that should be included; otherwise false.
+
+The signature of the filter function is:
+
+```
+    function(item, index) {
+        return true; // if item should be included
+    }
+```
+
 
 ### at(index: number) : function
 

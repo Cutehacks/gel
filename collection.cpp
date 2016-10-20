@@ -78,7 +78,9 @@ void Collection::updateModel()
 bool Collection::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     if (m_filter.isCallable()) {
-        QJSValue result = m_filter.call(QJSValueList() << model()->at(source_row));
+        QJSValue result = m_filter.call(QJSValueList()
+                                        << model()->at(source_row)
+                                        << source_row);
         return result.toBool();
     } else {
         return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
@@ -87,16 +89,6 @@ bool Collection::filterAcceptsRow(int source_row, const QModelIndex &source_pare
 
 bool Collection::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
-    /*if (m_comparator.isString()) {
-        QString compare = m_comparator.toString();
-        QJSValue left = model()->at(source_left.row());
-        QJSValue right = model()->at(source_right.row());
-
-        // TODO: Avoid variant?
-        QVariant leftVal = left.property(compare).toVariant();
-        QVariant rightVal = right.property(compare).toVariant();
-        return leftVal < rightVal;
-    } else */
     if (m_comparator.isCallable()) {
         QJSValue left = model()->at(source_left.row());
         QJSValue right = model()->at(source_right.row());
