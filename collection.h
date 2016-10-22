@@ -18,6 +18,7 @@ class Collection : public QSortFilterProxyModel
     Q_PROPERTY(bool caseSensitiveSort READ caseSensitiveSort WRITE setCaseSensitiveSort NOTIFY caseSensitiveSortChanged)
     Q_PROPERTY(bool localeAwareSort READ localeAwareSort WRITE setLocaleAwareSort NOTIFY localeAwareSortChanged)
     Q_PROPERTY(JsonListModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 
 public:
     Collection(QObject *parent = 0);
@@ -40,10 +41,12 @@ public:
         return isSortLocaleAware();
     }
 
-    bool descendingSort() const
+    inline bool descendingSort() const
     {
         return sortOrder() == Qt::DescendingOrder;
     }
+
+    inline int count() const { return rowCount(); }
 
 public slots:
     void setComparator(QJSValue comparator);
@@ -90,6 +93,10 @@ signals:
     void caseSensitiveSortChanged(bool caseSensitiveSort);
     void localeAwareSortChanged(bool localeAwareSort);
     void descendingSortChanged(bool descendingSort);
+    void countChanged(int count);
+
+private slots:
+    void emitCountChanged();
 
 protected:
     void updateModel();

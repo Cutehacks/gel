@@ -5,6 +5,11 @@ namespace com { namespace cutehacks { namespace gel {
 
 Collection::Collection(QObject *parent) : QSortFilterProxyModel(parent)
 {
+    connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this, SLOT(emitCountChanged()));
+    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(emitCountChanged()));
+
     sort(0);
 }
 
@@ -67,13 +72,17 @@ void Collection::rolesChanged()
     updateModel();
 }
 
+void Collection::emitCountChanged()
+{
+    emit countChanged(rowCount());
+}
+
 void Collection::updateModel()
 {
     if (model() && m_comparator.isString()) {
         int role = model()->getRole(m_comparator.toString());
         setSortRole(role);
     }
-//    sort(0);
 }
 
 
@@ -105,8 +114,7 @@ QJSValue Collection::at(int row) const
 {
     QModelIndex m = index(row, 0);
     QModelIndex source = mapToSource(m);
-    JsonListModel *jsonModel = qobject_cast<JsonListModel*>(sourceModel());
-    return jsonModel->at(source.row());
+    return model()->at(source.row());
 }
 
 void Collection::reSort()
