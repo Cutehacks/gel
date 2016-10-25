@@ -8,6 +8,8 @@
 
 namespace com { namespace cutehacks { namespace gel {
 
+static const char* GEL_URI = "com.cutehacks.gel";
+
 void registerEngine(QQmlEngine *)
 {
     // deprecated and done autmatically below
@@ -15,8 +17,9 @@ void registerEngine(QQmlEngine *)
 
 static void registerTypes()
 {
-    qmlRegisterType<JsonListModel>("com.cutehacks.gel", 1, 0, "JsonListModel");
-    qmlRegisterType<Collection>("com.cutehacks.gel", 1, 0, "Collection");
+    qmlRegisterType<JsonListModel>(GEL_URI, 1, 0, "JsonListModel");
+    qmlRegisterType<Collection>(GEL_URI, 1, 0, "Collection");
+    qmlProtectModule(GEL_URI, 1);
 }
 
 Q_COREAPP_STARTUP_FUNCTION(registerTypes)
