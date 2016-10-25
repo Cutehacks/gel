@@ -113,11 +113,12 @@ int JsonListModel::addItem(const QJSValue &item)
     if (item.isString() || item.isNumber() || item.isDate()) {
         id = item.toString();
     } else if (item.isObject()) {
-        if (!item.hasProperty(m_idAttribute)) {
+        QJSValue p = item.property(m_idAttribute);
+        if (p.isUndefined()) {
             qWarning("Object does not have a %s property", qPrintable(m_idAttribute));
             return row;
         }
-        id = item.property(m_idAttribute).toString();
+        id = p.toString();
     }
 
     QJSValue existingItem = m_items[id];
@@ -331,16 +332,17 @@ QVariant JsonListModel::data(const QModelIndex &index, int role) const
         for (QStringList::const_iterator p = parts.constBegin(); p != parts.end(); p++) {
             item = item.property(*p);
         }
-        if (item.hasProperty(roleName))
-            return item.property(roleName).toVariant();
-        else if (m_attachedProperties.hasProperty(roleName)) {
-            QJSValue generatedProp = m_attachedProperties.property(roleName);
-            QJSValue generatedResult = generatedProp;
-            if (generatedProp.isCallable())
-                generatedResult = generatedProp.call(QJSValueList() << item << row);
-            return generatedResult.toVariant();
+        QJSValue prop = item.property(roleName);
+        if (!prop.isUndefined())
+            return prop.toVariant();
+        prop = m_attachedProperties.property(roleName);
+        if (!prop.isUndefined()) {
+            QJSValue result = prop;
+            if (prop.isCallable())
+                result = prop.call(QJSValueList() << item << row);
+            return result.toVariant();
         }
-        return QJSValue().toVariant();
+        return prop.toVariant();
     }
 }
 
