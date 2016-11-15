@@ -30,7 +30,7 @@ public:
     Q_INVOKABLE QJSValue get(const QJSValue&) const;
     Q_INVOKABLE QJSValue asArray(bool deepCopy = false) const;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent= QModelIndex()) const;
