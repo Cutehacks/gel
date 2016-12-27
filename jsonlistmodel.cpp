@@ -114,7 +114,7 @@ int JsonListModel::addItem(const QJSValue &item)
         id = item.toString();
     } else if (item.isObject()) {
         if (!item.hasProperty(m_idAttribute)) {
-            qWarning("Object does not have a %s property", qUtf8Printable(m_idAttribute));
+            qWarning("Object does not have a %s property", qPrintable(m_idAttribute));
             return row;
         }
         id = item.property(m_idAttribute).toString();
