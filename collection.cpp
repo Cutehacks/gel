@@ -122,5 +122,10 @@ void Collection::reSort()
     sort(0);
 }
 
+void Collection::reFilter()
+{
+    invalidateFilter();
+}
+
 } } }
 
