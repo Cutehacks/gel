@@ -30,6 +30,7 @@ public:
     Q_INVOKABLE QJSValue at(int) const;
 
     Q_INVOKABLE void reSort();
+    Q_INVOKABLE void reFilter();
 
     inline bool caseSensitiveSort() const
     {

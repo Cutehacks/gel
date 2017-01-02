@@ -191,6 +191,13 @@ Trigger sorting the collection again.
 external data has been updated, e.g. you sort a model by distance and the current position
 of the user has changed.
 
+### reFilter() : function
+
+Trigger refiltering the collection.
+
+**NOTE** Same as reSort(), this function is not required if the data within the model itself
+has changed.
+
 ### descendingSort : property bool: false
 
 Indicates if the role based sorting is sorted in ascending or descending order.
