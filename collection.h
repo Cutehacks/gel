@@ -17,7 +17,7 @@ class Collection : public QSortFilterProxyModel
     Q_PROPERTY(bool descendingSort READ descendingSort WRITE setDescendingSort NOTIFY descendingSortChanged)
     Q_PROPERTY(bool caseSensitiveSort READ caseSensitiveSort WRITE setCaseSensitiveSort NOTIFY caseSensitiveSortChanged)
     Q_PROPERTY(bool localeAwareSort READ localeAwareSort WRITE setLocaleAwareSort NOTIFY localeAwareSortChanged)
-    Q_PROPERTY(JsonListModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(com::cutehacks::gel::JsonListModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 
 public:
