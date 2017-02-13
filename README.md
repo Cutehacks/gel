@@ -8,26 +8,6 @@ Gel is available on qpm:
 
 `qpm install com.cutehacks.gel`
 
-# Usage
-
-In your main.cpp:
-
-```
-#include "com/cutehacks/gel/gel.h"
-	
-int main(int argc, char *argv[])
-{
-	...
-	
-	com::cutehacks::gel::registerEngine(&engine);
-	
-	...
-}
-```
-
-The above function will register two QML types with the QML engine which are documented
-below.
-
 # API
 
 ## JsonListModel
