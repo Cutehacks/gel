@@ -120,14 +120,11 @@ QJSValue Collection::at(int row) const
 
 void Collection::reSort()
 {
-    if (dynamicSortFilter())
-    {
+    if (dynamicSortFilter()) {
         // Workaround: If dynamic_sortfilter == true, sort(0) will not (always)
         // result in d->sort() being called, but setDynamicSortFilter(true) will.
         setDynamicSortFilter(true);
-    }
-    else
-    {
+    } else {
         sort(0);
     }
 }
