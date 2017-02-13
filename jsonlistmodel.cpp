@@ -167,6 +167,7 @@ void JsonListModel::add(const QJSValue &item)
             emit rolesChanged();
             beginResetModel();
             endResetModel();
+            emitCountChanged();
         } else {
             int newSize = m_keys.count();
             m_lock->unlock();
@@ -191,6 +192,7 @@ void JsonListModel::add(const QJSValue &item)
             emit rolesChanged();
             beginResetModel();
             endResetModel();
+            emitCountChanged();
             return;
         }
 
