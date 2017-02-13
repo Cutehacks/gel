@@ -62,6 +62,7 @@ void Collection::setModel(JsonListModel *model)
     setSourceModel(model);
     updateModel();
     connect(model, SIGNAL(rolesChanged()), this, SLOT(rolesChanged()));
+    connect(model, SIGNAL(countChanged(int)), this, SLOT(emitCountChanged()));
 
     emit modelChanged(model);
 }
