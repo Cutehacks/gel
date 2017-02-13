@@ -8,6 +8,14 @@ Gel is available on qpm:
 
 `qpm install com.cutehacks.gel`
 
+# Usage
+
+To start using Gel, just add the following line to your .qml file:
+
+```
+import com.cutehacks.gel 1.0
+```
+
 # API
 
 ## JsonListModel
