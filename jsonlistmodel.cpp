@@ -233,7 +233,6 @@ void JsonListModel::remove(const QJSValue &item)
         m_keys.removeAt(index);
         m_items.remove(key);
     }
-    emit dataChanged(createIndex(index, 0), createIndex(m_keys.count() - 1, 0));
     beginRemoveRows(QModelIndex(), index, index);
     endRemoveRows();
 }
